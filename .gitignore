@@ -1,0 +1,4 @@
+evalution_metrices/
+models
+tensorboard_results
+__pycache__
