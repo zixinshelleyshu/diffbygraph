@@ -8,6 +8,8 @@ class DenseNet121(nn.Module):
     """
     def __init__(self, num_classes):
         super(DenseNet121, self).__init__()
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
         self.densenet121 = torchvision.models.densenet121(pretrained=True)
         num_ftrs = self.densenet121.classifier.in_features
         self.densenet121.classifier = nn.Sequential(

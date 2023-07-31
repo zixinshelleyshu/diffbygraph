@@ -30,7 +30,7 @@ parser.add_argument('--bs', type=int, default=32, help="batch_size")
 parser.add_argument('--nc', type=int, default=5, help="number of classes")
 parser.add_argument('--interp', type=str, default="gc", help="interpretability method")
 parser.add_argument('--select_short', type=str, default=False, help="selecting smaller portion of image for debugging")
-parser.add_argument('--n_epochs_stop',type=float, default=12, help="the number of epoch waiting before early stopping")
+parser.add_argument('--n_epochs_stop',type=float, default=10, help="the number of epoch waiting before early stopping")
 parser.add_argument('--location', type=str)
 args = parser.parse_args()
 args.cuda = torch.cuda.is_available()
@@ -40,8 +40,10 @@ torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 random.seed(args.seed)
 # torch.use_deterministic_algorithms(True)
-
-homepath="/home/shelley/Documents/CheXpert/"
+if args.location=="ubelix":
+    homepath="/storage/homefs/zs23p242/"
+else:
+    homepath="/home/shelley/Documents/CheXpert/"
 train_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/train.csv")
 val_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/val.csv")
 test_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/test.csv")
@@ -127,6 +129,9 @@ def train(epoch,train_dataloader, model, optimizer, writer,step, n_classes):
     outputs=torch.cat(preds_list).cpu().data.numpy()
     roc_auc=roc_auc_score(targets, outputs, average=None)
     print("auroc", roc_auc)
+
+
+    
 
     return mean_train_loss, step
 
@@ -225,7 +230,10 @@ def test(test_dataloader, n_classes,model):
 
 
 if __name__ == "__main__":
-    storinghome="/home/shelley/Documents/diffbygraph"
+    if args.location=="ubelix":
+        storinghome="/storage/homefs/zs23p242/diffbygraph"
+    else:
+        storinghome="/home/shelley/Documents/diffbygraph"
     PATH_TB=storinghome+'/tensorboard_results'
     os.makedirs(PATH_TB,exist_ok=True)
     os.makedirs(PATH_TB+"/"+"seed"+str(args.seed),exist_ok=True)
