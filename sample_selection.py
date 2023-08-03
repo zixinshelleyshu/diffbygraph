@@ -42,15 +42,24 @@ training_selected_ind+=selected_pl_sample
 selected_train_dataset=train_labels.iloc[sorted(training_selected_ind),:]
 selected_train_dataset.loc[:,exist_labels]=selected_train_dataset[exist_labels].fillna(0)# not mention in report we assume it is a negative sample
 
+
+
 valid_labels_front=pd.DataFrame([x for i, x in valid_labels.iterrows() if "front" in x['Path']])
 test_labels_front=pd.DataFrame([x for i, x in test_labels.iterrows() if "front" in x['Path']])
 
-print("avaliable training data",selected_train_dataset.shape[0])
-print("validation data",valid_labels_front.shape[0])     
-print("test data",test_labels_front.shape[0])
-  
-# PATH="/home/shelley/Documents/CheXpert/CheXpert-v1.0/withtestset_alltrain"
+valid_labels_atleastone_positive=valid_labels_front[(valid_labels_front[exist_labels]>0).any(axis=1)]
+test_labels_atleastone_positive=test_labels_front[(test_labels_front[exist_labels]>0).any(axis=1)]
+
+print("avaliable training data",train_labels_front.shape[0])
+print("validation data",valid_labels_atleastone_positive.shape[0])     
+print("test data",test_labels_atleastone_positive.shape[0])
+# print("avaliable training data",train_labels_front.shape[0])
+# print("validation data",valid_labels_front.shape[0])     
+# print("test data",test_labels_front.shape[0])
+
+
+# PATH="/home/shelley/Documents/CheXpert/CheXpert-v1.0/withtestset_alltrain_gt1fortestval"
 # os.makedirs(PATH, exist_ok=True)
 # train_labels_front.to_csv(PATH+"/train.csv")
-# valid_labels_front.to_csv(PATH+"/val.csv")
-# test_labels_front.to_csv(PATH+"/test.csv")
+# valid_labels_atleastone_positive.to_csv(PATH+"/val.csv")
+# test_labels_atleastone_positive.to_csv(PATH+"/test.csv")

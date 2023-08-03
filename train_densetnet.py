@@ -39,11 +39,12 @@ short_select=100
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 random.seed(args.seed)
-# torch.use_deterministic_algorithms(True)
+
 if args.location=="ubelix":
     homepath="/storage/homefs/zs23p242/"
 else:
     homepath="/home/shelley/Documents/CheXpert/"
+    
 train_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/train.csv")
 val_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/val.csv")
 test_labels_meta=pd.read_csv(homepath+"CheXpert-v1.0/withtestset_alltrain/test.csv")
@@ -164,6 +165,9 @@ def val(writer, step_val, valid_dataloader,model, n_classes):
 
             val_loss_list.append(loss.cpu().data.numpy())
             writer.add_scalar('validation loss',loss, step_val)
+
+            roc_auc_batch=roc_auc_score(labels.cpu().numpy(), preds.cpu().numpy())
+            writer.add_scalar('roc_auc_val',roc_auc_batch, step_val)
 
             labels_list.append(labels.cpu().data.numpy())
             preds_list.append(preds.cpu().data.numpy())

@@ -1,4 +1,8 @@
 evalution_metrices/
 models
 tensorboard_results
-__pycache__
+__pycache__/
+graph_visualisation/
+graph_visualisation_gradcamnew/
+*plot*
+
