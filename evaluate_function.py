@@ -42,6 +42,7 @@ def test_evaluate(test_dataloader, n_classes,model,args,exist_labels):
         plt.xlabel('fpr')
         plt.ylabel('tpr')
         plt.savefig(fig_path+"{}_ROC_lr{}_epoches{}.png".format(args.name, args.lr, args.epochs))
+        plt.close()
         roc_auc=roc_auc_score(targets, outputs)
         roc_auc_byclass=roc_auc_score(targets, outputs,average=None)
 

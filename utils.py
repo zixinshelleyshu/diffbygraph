@@ -62,12 +62,20 @@ def plot_similarity_ingraph(images, embeddings,orig_image, ClassDistinctivenessL
 
             # gray_image = cv2.cvtColor(orig_image.detach().cpu().numpy(), cv2.COLOR_BGR2GRAY)
         heatmap=np.squeeze(heatmap.detach().cpu().numpy(), axis=0)
-        heatmap= cv2.applyColorMap(np.uint8(heatmap*255), cv2.COLORMAP_JET)
+        # heatmapshow=None
+        # heatmap = cv2.normalize(heatmap, heatmapshow, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        # heatmapshow=cv2.applyColorMap(np.uint8(heatmap*255), cv2.COLORMAP_JET)
         heatmap=(heatmap-np.amin(heatmap))/(np.amax(heatmap)-np.amin(heatmap))
+        heatmap= cv2.applyColorMap(np.uint8((255-heatmap)*255), cv2.COLORMAP_JET)
+        # heatmap_3channels = cv2.merge((heatmap,heatmap,heatmap))
+
+        
         # orig_image=PIL.Image.fromarray(np.uint8(orig_image*255))
         # orig_image=orig_image.convert('L') 
         # heat_images = cv2.addWeighted(np.uint8(255*heatmap), 0.5, orig_image, 0.5, 0)
-        heat_images=orig_image*0.6+heatmap*0.4
+
+        heat_images=np.uint8(orig_image*0.7*255)+heatmap*0.3
+        heat_images=(heat_images-np.amin(heat_images))/(np.amax(heat_images)-np.amin(heat_images))
         # G.add_node(i,label=exist_labels[i][:2])
         G.add_node(i,label=exist_labels[i][:2], image=heat_images)
 
