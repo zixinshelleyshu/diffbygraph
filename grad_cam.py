@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-
+# the code is orginally from https://github.com/kamenbliznashki/chexpert/blob/master/chexpert.py
 @torch.enable_grad()
 def grad_cam(model, x, hooks, cls_idx=None):
     """ cf CheXpert: Test Results / Visualization; visualize final conv layer, using grads of final linear layer as weights,

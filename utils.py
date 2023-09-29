@@ -40,14 +40,17 @@ class compute_similarity(nn.Module):
             loss_list= np.concatenate((loss_list,torch.unsqueeze(torch.abs(self.view_tensor(sal_comb[0])-self.view_tensor(sal_comb[1])).mean(), dim=0).numpy()))
         # loss_list=np.concatenate(loss_list)
         max_dis=np.max(loss_list)
+        loss_list_nornomalised=loss_list
         loss_list=loss_list/np.max(loss_list)
         similarity_df=pd.DataFrame(zip(seleced_index,loss_list))
-        return similarity_df, max_dis
+        return similarity_df, max_dis, loss_list_nornomalised
         
 
-def plot_similarity_ingraph(images, embeddings,orig_image, ClassDistinctivenessLoss, exist_labels,patient_ind, patient_disease,preds):
+def plot_similarity_ingraph(images, embeddings,orig_image, ClassDistinctivenessLoss, exist_labels,patient_ind, patient_disease,preds,loss_nornomalised_list):
     cdcriterion = ClassDistinctivenessLoss(device="cuda")
-    similarity_df, max_dis= cdcriterion.similarity_scores(torch.tensor(embeddings))
+    similarity_df, max_dis, loss_nornomalised= cdcriterion.similarity_scores(torch.tensor(embeddings))
+    loss_nornomalised_list.append(loss_nornomalised)
+    
     
     # Generate the computer network graph
     G = nx.Graph()
@@ -142,3 +145,5 @@ def plot_similarity_ingraph(images, embeddings,orig_image, ClassDistinctivenessL
         a = plt.axes([xa - icon_center, ya - icon_center, icon_size, icon_size])
         a.imshow(G.nodes[n]["image"])
         a.axis("off")
+
+    return loss_nornomalised_list 
